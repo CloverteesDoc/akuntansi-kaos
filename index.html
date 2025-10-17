@@ -1,61 +1,279 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Form Pemesanan Clovertees</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Bisnis Kaos</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <form id="formPemesanan">
-    <h2>📝 Form Pemesanan Clovertees</h2>
+    <header>
+        <h1>Manajemen Bisnis Kaos</h1>
+        <nav>
+            <ul>
+                <li><a href="#dashboard" class="nav-link active">Dashboard</a></li>
+                <li><a href="#stok" class="nav-link">Stok Barang</a></li>
+                <li><a href="#pembeli" class="nav-link">Daftar Pembeli</a></li>
+                <li><a href="#invoice" class="nav-link">Invoice</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <label for="nama">Nama Lengkap:</label>
-    <input type="text" id="nama" name="nama" required placeholder="Nama kamu">
-        
-    <label for="telepon">No. WhatsApp:</label>
-    <input type="tel" id="telepon" name="telepon" required placeholder="Contoh: 08123456789" pattern="[0-9]{10,13}">
-    
-    <label for="instagram">Instagram:</label>
-    <input type="text" id="instagram" name="instagram" placeholder="Opsional (isi jika ada)">
+    <main>
+        <!-- Dashboard -->
+        <section id="dashboard" class="content-section active">
+            <h2>Dashboard</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <h3>Total Produk</h3>
+                    <p id="total-produk">0</p>
+                </div>
+                <div class="card">
+                    <h3>Total Pembeli</h3>
+                    <p id="total-pembeli">0</p>
+                </div>
+                <div class="card">
+                    <h3>Invoice Bulan Ini</h3>
+                    <p id="total-invoice">0</p>
+                </div>
+            </div>
+        </section>
 
-    <label for="alamat">Alamat Lengkap:</label>
-    <textarea id="alamat" name="alamat" required placeholder="Wajib diisi / Ambil Di Tempat"></textarea>
-    
-    <div id="warnaContainer"></div>
-    <button type="button" onclick="tambahWarna()">➕ Tambah Warna Lain</button>
+        <!-- Stok Barang -->
+        <section id="stok" class="content-section">
+            <h2>Manajemen Stok Barang</h2>
+            <div class="form-container">
+                <h3>Tambah/Edit Barang</h3>
+                <form id="form-barang">
+                    <input type="hidden" id="barang-id">
+                    <div class="form-group">
+                        <label for="kategori-barang">Kategori:</label>
+                        <select id="kategori-barang" required onchange="ubahFormBerdasarkanKategori()">
+                            <option value="">Pilih Kategori</option>
+                            <option value="kaos-polos">Kaos Polos</option>
+                            <option value="kaos-lengan-panjang">Kaos Lengan Panjang</option>
+                            <option value="dress">Dress</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Form untuk Kaos Polos dan Kaos Lengan Panjang -->
+                    <div id="form-kaos" class="kategori-form">
+                        <div class="form-group">
+                            <label for="warna-kaos">Warna:</label>
+                            <select id="warna-kaos">
+                                <!-- Opsi warna akan diisi oleh JavaScript -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ukuran-kaos">Ukuran:</label>
+                            <select id="ukuran-kaos">
+                                <!-- Opsi ukuran akan diisi oleh JavaScript -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Form untuk Dress -->
+                    <div id="form-dress" class="kategori-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="warna-dress">Warna:</label>
+                            <select id="warna-dress">
+                                <!-- Opsi warna akan diisi oleh JavaScript -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ukuran-dress">Ukuran:</label>
+                            <select id="ukuran-dress">
+                                <!-- Opsi ukuran akan diisi oleh JavaScript -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Form untuk Kategori Lainnya -->
+                    <div id="form-lainnya" class="kategori-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="nama-barang">Nama Barang:</label>
+                            <input type="text" id="nama-barang">
+                        </div>
+                    </div>
+                    
+                    <!-- Form umum untuk semua kategori -->
+                    <div class="form-group">
+                        <label for="harga-barang">Harga (Rp):</label>
+                        <input type="number" id="harga-barang" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stok-barang">Stok:</label>
+                        <input type="number" id="stok-barang" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="deskripsi-barang">Deskripsi:</label>
+                        <textarea id="deskripsi-barang"></textarea>
+                    </div>
+                    <button type="submit" id="simpan-barang">Simpan Barang</button>
+                    <button type="button" id="reset-barang">Reset</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <h3>Daftar Barang</h3>
+                <div class="filter-container">
+                    <label for="filter-kategori">Filter Kategori:</label>
+                    <select id="filter-kategori">
+                        <option value="semua">Semua Kategori</option>
+                        <option value="kaos-polos">Kaos Polos</option>
+                        <option value="kaos-lengan-panjang">Kaos Lengan Panjang</option>
+                        <option value="dress">Dress</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <table id="tabel-barang">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kategori</th>
+                            <th>Nama/Deskripsi</th>
+                            <th>Warna</th>
+                            <th>Ukuran</th>
+                            <th>Harga</th>
+                            <th>Stok</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-tabel-barang">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <div class="total-section" id="totalDisplay">Total Pesanan: 0 pcs</div>
-    <div class="total-section" id="rincianHarga">Total Harga: Rp0</div>
+        <!-- Daftar Pembeli -->
+        <section id="pembeli" class="content-section">
+            <h2>Daftar Pembeli</h2>
+            <div class="form-container">
+                <h3>Tambah/Edit Pembeli</h3>
+                <form id="form-pembeli">
+                    <input type="hidden" id="pembeli-id">
+                    <div class="form-group">
+                        <label for="nama-pembeli">Nama Pembeli:</label>
+                        <input type="text" id="nama-pembeli" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telepon-pembeli">Telepon:</label>
+                        <input type="text" id="telepon-pembeli" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email-pembeli">Email:</label>
+                        <input type="email" id="email-pembeli">
+                    </div>
+                    <div class="form-group">
+                        <label for="alamat-pembeli">Alamat:</label>
+                        <textarea id="alamat-pembeli" required></textarea>
+                    </div>
+                    <button type="submit" id="simpan-pembeli">Simpan Pembeli</button>
+                    <button type="button" id="reset-pembeli">Reset</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <h3>Data Pembeli</h3>
+                <table id="tabel-pembeli">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>Telepon</th>
+                            <th>Email</th>
+                            <th>Alamat</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-tabel-pembeli">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <div class="note">
-      <strong>📌 Perhatian!</strong><br>
-      Berikut ini syarat & ketentuan untuk belanja di Clovertees : <br><br>
-      1. Setelah submit, warna & ukuran <strong>tidak bisa diubah</strong>.<br>
-      2. Harga diatas belum termasuk Ongkir, Diskon dan tambahan harga <em>( jika ada )</em><br>
-      3. Mohon Informasikan setelah transfer.<br>
-        <em><p style="text-indent: 20px;">*Desain akan diproses sesuai antrian</p></em>
-        <em><p style="text-indent: 20px;">( Yang transfer duluan diproses duluan ) </p></em>
-      4. Proses pembuatan: 4-7 hari setelah approve desain.<br>
-        <em><p style="text-indent: 20px;">NB : tergantung pada qty pesanan</p></em>
-        <em><p style="text-indent: 20px;">( Apabila size dan warna baju ready )</p></em>
-      5. Warna bisa berbeda sedikit tergantung bahan (cotton combed 24s/30s).<br>
-        <em><p style="text-indent: 20px;">(Kids dan dress bahan catton combed 24s dan dewasa catton combed 30s) </p></em>
-        <br>
-      <em>Order = Setuju dengan syarat di atas.</em>
-      
-    </div>
+        <!-- Invoice -->
+        <section id="invoice" class="content-section">
+            <h2>Manajemen Invoice</h2>
+            <div class="form-container">
+                <h3>Buat Invoice Baru</h3>
+                <form id="form-invoice">
+                    <input type="hidden" id="invoice-id">
+                    <div class="form-group">
+                        <label for="nomor-invoice">Nomor Invoice:</label>
+                        <input type="text" id="nomor-invoice" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal-invoice">Tanggal:</label>
+                        <input type="date" id="tanggal-invoice" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pembeli-invoice">Pembeli:</label>
+                        <select id="pembeli-invoice" required>
+                            <option value="">Pilih Pembeli</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="barang-invoice">Barang:</label>
+                        <select id="barang-invoice">
+                            <option value="">Pilih Barang</option>
+                        </select>
+                        <button type="button" id="tambah-barang-invoice">Tambah Barang</button>
+                    </div>
+                    <div class="table-container">
+                        <h4>Daftar Barang di Invoice</h4>
+                        <table id="tabel-barang-invoice">
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Harga</th>
+                                    <th>Jumlah</th>
+                                    <th>Subtotal</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="body-tabel-barang-invoice">
+                                <!-- Data akan diisi oleh JavaScript -->
+                            </tbody>
+                        </table>
+                        <div class="total-container">
+                            <h4>Total: <span id="total-invoice-amount">Rp 0</span></h4>
+                        </div>
+                    </div>
+                    <button type="submit" id="simpan-invoice">Simpan Invoice</button>
+                    <button type="button" id="reset-invoice">Reset</button>
+                </form>
+            </div>
+            <div class="table-container">
+                <h3>Daftar Invoice</h3>
+                <table id="tabel-invoice">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nomor Invoice</th>
+                            <th>Tanggal</th>
+                            <th>Pembeli</th>
+                            <th>Jumlah Barang</th>
+                            <th>Total Harga</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-tabel-invoice">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
 
-    <!-- Loading -->
-    <div class="loading" id="loadingMessage">
-    <div class="spinner"></div>
-    <p>Mengirim pesanan...</p>
-    </div>
+    <footer>
+        <p>&copy; 2023 Manajemen Bisnis Kaos</p>
+    </footer>
 
-    <!-- Tombol Submit -->
-    <button type="submit">🚀 Kirim Pesanan</button>
-  </form>
+    <!-- Modal untuk lihat invoice -->
+    <div id="modal-invoice" class="modal"></div>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
